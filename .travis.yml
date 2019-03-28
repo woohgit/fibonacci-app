@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t wooh/react-client -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run wooh/react-client npm run test -- --coverage
+
+after_success:
+  - docker build -t wooh/react-api -f ./server/Dockerfile ./server
+  - docker build -t wooh/react-client -f ./client/Dockerfile ./client
+  - docker build -t wooh/react-nginx -f ./nginx/Dockerfile ./nginx
+  - docker build -t wooh/react-worker -f ./worker/Dockerfile ./worker
+  - docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD"
+  - docker push wooh/react-api
+  - docker push wooh/react-client
+  - docker push wooh/react-nginx
+  - docker push wooh/react-worker
