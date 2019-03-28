@@ -13,7 +13,7 @@ after_success:
   - docker build -t wooh/react-client -f ./client/Dockerfile ./client
   - docker build -t wooh/react-nginx -f ./nginx/Dockerfile ./nginx
   - docker build -t wooh/react-worker -f ./worker/Dockerfile ./worker
-  - docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD"
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push wooh/react-api
   - docker push wooh/react-client
   - docker push wooh/react-nginx
